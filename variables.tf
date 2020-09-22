@@ -3,9 +3,12 @@ variable "name" {
   description = "The name of the Virtual WAN."
 }
 
-variable "resource_group_name" {
-  type        = string
-  description = "The name of the resource group in which to create the resources."
+variable "resource_group" {
+  type = object({
+    name     = string
+    location = string
+  })
+  description = "The resource group in which to create the resources."
 }
 
 variable "allow_branch_to_branch_traffic" {

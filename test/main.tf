@@ -1,12 +1,12 @@
 data "azurerm_client_config" "test" {}
 
 resource "azurerm_resource_group" "test" {
-  name     = "${var.name_prefix}-rg"
+  name     = format("%s-rg", var.name_prefix)
   location = var.region
 }
 
 resource "azurerm_virtual_network" "test" {
-  name                = "${var.name_prefix}-vnet"
+  name                = format("%s-vnet", var.name_prefix)
   location            = "westeurope"
   resource_group_name = azurerm_resource_group.test.name
 
@@ -16,9 +16,9 @@ resource "azurerm_virtual_network" "test" {
 module "wan" {
   source = "../"
 
-  name = "${var.name_prefix}-vwan"
+  name = format("%s-vwan", var.name_prefix)
 
-  resource_group_name = azurerm_resource_group.test.name
+  resource_group = azurerm_resource_group.test
 
   hubs = [
     {

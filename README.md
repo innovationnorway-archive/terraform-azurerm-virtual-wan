@@ -15,7 +15,7 @@ module "wan" {
 
   name_prefix = "example-vwan"
 
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group = azurerm_resource_group.example
 
   hubs = [
     {
@@ -34,7 +34,7 @@ module "wan" {
 
 * `name` - (Required) The name of the virtual WAN.	
 
-* `resource_group_name` - (Required) The name of the resource group in which to create the resources.	
+* `resource_group` - (Required) The resource group in which to create the resources.
 
 * `hubs` - (Required) - A list of hubs to create within the virtual WAN. This should be a list of `hubs` objects as described below.
 
