@@ -13,7 +13,7 @@ resource "azurerm_resource_group" "example" {
 module "wan" {
   source = "innovationnorway/virtual-wan/azurerm"
 
-  name_prefix = "example-vwan"
+  name = "example-vwan"
 
   resource_group = azurerm_resource_group.example
 
