@@ -13,3 +13,8 @@ output "hubs" {
 
   description = "A list of hubs within the virtual WAN."
 }
+
+output "connections" {
+  value       = var.connections
+  description = "Echoes back the `connections` input variable value, for convenience if passing the result of this module elsewhere as an object."
+}

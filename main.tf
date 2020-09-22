@@ -19,3 +19,10 @@ resource "azurerm_virtual_hub" "main" {
   virtual_wan_id      = azurerm_virtual_wan.main.id
   address_prefix      = each.value.prefix
 }
+
+resource "azurerm_virtual_hub_connection" "main" {
+  for_each                  = { for c in local.connections : c.id => c }
+  name                      = basename(each.key)
+  virtual_hub_id            = azurerm_virtual_hub.main[each.value.region].id
+  remote_virtual_network_id = each.value.id
+}

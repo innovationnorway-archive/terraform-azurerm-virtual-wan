@@ -1,20 +1,24 @@
-resource "random_id" "test" {
-  byte_length = 4
-}
+data "azurerm_client_config" "test" {}
 
 resource "azurerm_resource_group" "test" {
-  name     = format("%s-%s", var.name_prefix, random_id.test.hex)
+  name     = "${var.name_prefix}-rg"
   location = var.region
+}
+
+resource "azurerm_virtual_network" "test" {
+  name                = "${var.name_prefix}-vnet"
+  location            = "westeurope"
+  resource_group_name = azurerm_resource_group.test.name
+
+  address_space = ["10.128.0.0/16"]
 }
 
 module "wan" {
   source = "../"
 
-  name = format("%s-%s", var.name_prefix, random_id.test.hex)
+  name = "${var.name_prefix}-vwan"
 
   resource_group_name = azurerm_resource_group.test.name
-
-  allow_vnet_to_vnet_traffic = true
 
   hubs = [
     {
@@ -26,6 +30,22 @@ module "wan" {
       prefix = "10.2.0.0/16"
     },
   ]
+
+  connections = {
+    "westeurope" = [
+      # We cannot use "for_each" with resource attributes that
+      # are unknown before apply, so we have to build the 
+      # resource ID from known values.
+      format(
+        "/subscriptions/%s/resourceGroups/%s/providers/Microsoft.Network/virtualNetworks/%s",
+        data.azurerm_client_config.test.subscription_id,
+        "${var.name_prefix}-rg",
+        "${var.name_prefix}-vnet"
+      )
+    ]
+  }
+
+  depends_on = [azurerm_virtual_network.test]
 }
 
 data "testing_assertions" "wan" {

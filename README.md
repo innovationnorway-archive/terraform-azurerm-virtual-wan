@@ -38,6 +38,8 @@ module "wan" {
 
 * `hubs` - (Required) - A list of hubs to create within the virtual WAN. This should be a list of `hubs` objects as described below.
 
+* `connections` - (Optional) A mapping from each region to a list of virtual network IDs to which the virtual hub should be connected.
+
 The `hubs` object supports the following:
 
 * `region` - (Required) The Azure region where the virtual hub should be created.
